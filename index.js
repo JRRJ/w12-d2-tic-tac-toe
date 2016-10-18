@@ -8,16 +8,6 @@ const rl = readline.createInterface({
   prompt: '> '
 });
 
-//rl.prompt();
-
-rl.on('line', (line) => {
-  console.log(line.trim());
-  if(line.trim()==='q'){
-    process.exit();
-  }
-  rl.prompt();
-})
-
 // board
 
 class Board {
@@ -46,6 +36,9 @@ class Board {
     console.log(' -----------');
   }
   addPiece(square, piece){
+    if(square < 1 || square > 9){
+      return false;
+    }
     let row = Math.floor((square-1)/3)
     let col = (square - 1) % 3;
     if(this.squares[row][col] !== 'X' && this.squares[row][col] !== 'O'){
@@ -90,12 +83,45 @@ class Board {
 const board = new Board;
 board.makeBoard();
 board.display();
-board.addPiece(1, 'O');
-board.display();
-board.addPiece(5, 'O');
-console.log(board.checkWin());
-board.addPiece(9, 'O');
-console.log(board.checkWin());
+
+let turn = 1;
+let over = false;
+
+const startGame = () => {
+  console.log('Tic-tac-toe! Player 1 is O, Player 2 is X');
+  console.log('Press the square you want to add a piece to,');
+  console.log('or press q to quit')
+}
+
+console.log('Player 1, choose a square > ');
+rl.prompt();
+
+rl.on('line', (line) => {
+  line = line.trim();
+
+
+  turn++;
+
+  if(turn % 2 !== 0){
+    console.log('Player 1, choose a square > ');
+  } else {
+    console.log('Player 2, choose a square > ');
+  }
+  
+  rl.prompt();
+
+  console.log(line.trim());
+  if(line==='q'){
+    process.exit();
+  }
+})
+
+// board.addPiece(1, 'O');
+// board.display();
+// board.addPiece(5, 'O');
+// console.log(board.checkWin());
+// board.addPiece(9, 'O');
+// console.log(board.checkWin());
 // alternate turns between players.
 // after every turn, check if someone won
 // if so, end game.
